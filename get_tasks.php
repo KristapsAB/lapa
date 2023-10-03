@@ -1,35 +1,61 @@
 <?php
-// Establish a database connection
-$servername = "localhost"; // Replace with your MySQL server address
-$username = "root"; // Replace with your MySQL username
-$password = ""; // Replace with your MySQL password
-$dbname = "task_management"; // Replace with your database name
+class TaskFetcher {
+    private $conn;
 
-$conn = new mysqli($servername, $username, $password, $dbname);
+    public function __construct() {
+        $servername = "localhost";
+        $username = "root";
+        $password = "";
+        $dbname = "task_management";
 
-// Check the connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+        $this->conn = new mysqli($servername, $username, $password, $dbname);
+
+        if ($this->conn->connect_error) {
+            die("Connection failed: " . $this->conn->connect_error);
+        }
+    }
+
+    public function fetchTasks() {
+        $sql = "SELECT * FROM tasks";
+        $result = $this->conn->query($sql);
+
+        if ($result->num_rows > 0) {
+            $tasks = array();
+            while ($row = $result->fetch_assoc()) {
+                $taskId = $row['id'];
+                $status = $row['status'];
+                $completed = ($status === 'Completed') ? 'checked' : '';
+
+                $tasks[] = [
+                    'title' => $row['title'],
+                    'description' => $row['description'],
+                    'due_date' => $row['due_date'],
+                    'status' => $status,
+                    'completed' => $completed,
+                    'task_id' => $taskId,
+                ];
+            }
+            return $tasks;
+        } else {
+            return array();
+        }
+    }
+
+    public function __destruct() {
+        $this->conn->close();
+    }
 }
 
-// Fetch tasks from the database (assuming you have a "tasks" table)
-$sql = "SELECT * FROM tasks";
-$result = $conn->query($sql);
+$taskFetcher = new TaskFetcher();
+$tasks = $taskFetcher->fetchTasks();
 
-if ($result->num_rows > 0) {
+if (!empty($tasks)) {
     echo '<ul>';
-    while ($row = $result->fetch_assoc()) {
-        $taskId = $row['id'];
-        $status = $row['status'];
-        $completed = ($status === 'Completed') ? 'checked' : '';
-        
-        echo '<li>' . $row['title'] . ' - ' . $row['description'] . ' - Due: ' . $row['due_date'] . ' - Status: <input type="checkbox" class="status-checkbox" data-task-id="' . $taskId . '" ' . $completed . '> ' . $status . ' <button class="edit-button" data-task-id="' . $taskId . '">Edit</button> <button class="delete-button" data-task-id="' . $taskId . '">Delete</button></li>';
+    foreach ($tasks as $task) {
+        echo '<li>' . $task['title'] . ' - ' . $task['description'] . ' - Due: ' . $task['due_date'] . ' - Status: <input type="checkbox" class="status-checkbox" data-task-id="' . $task['task_id'] . '" ' . $task['completed'] . '> ' . $task['status'] . ' <button class="edit-button" data-task-id="' . $task['task_id'] . '">Edit</button> <button class="delete-button" data-task-id="' . $task['task_id'] . '">Delete</button></li>';
     }
     echo '</ul>';
 } else {
     echo 'No tasks found.';
 }
-
-// Close the database connection
-$conn->close();
 ?>

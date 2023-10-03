@@ -1,24 +1,48 @@
 <?php
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $conn = mysqli_connect('localhost', 'root', '', 'task_management');
+class TaskManager {
+    private $conn;
 
-    if (!$conn) {
-        die("Connection failed: " . mysqli_connect_error());
+    public function __construct() {
+        $this->conn = new mysqli('localhost', 'root', '', 'task_management');
+
+        if ($this->conn->connect_error) {
+            die("Connection failed: " . $this->conn->connect_error);
+        }
     }
 
-    $title = mysqli_real_escape_string($conn, $_POST['title']);
-    $description = mysqli_real_escape_string($conn, $_POST['description']);
+    public function addTask($title, $description, $due_date, $status) {
+        $title = $this->conn->real_escape_string($title);
+        $description = $this->conn->real_escape_string($description);
+        
+        $sql = "INSERT INTO tasks (title, description, due_date, status) VALUES (?, ?, ?, ?)";
+        $stmt = $this->conn->prepare($sql);
+
+        if ($stmt) {
+            $stmt->bind_param("ssss", $title, $description, $due_date, $status);
+            if ($stmt->execute()) {
+                $stmt->close();
+                return "Task added successfully.";
+            } else {
+                return "Error: " . $stmt->error;
+            }
+        } else {
+            return "Error: " . $this->conn->error;
+        }
+    }
+
+    public function __destruct() {
+        $this->conn->close();
+    }
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $taskManager = new TaskManager();
+    $title = $_POST['title'];
+    $description = $_POST['description'];
     $due_date = $_POST['due_date'];
     $status = $_POST['status'];
 
-    $sql = "INSERT INTO tasks (title, description, due_date, status) VALUES ('$title', '$description', '$due_date', '$status')";
-
-    if (mysqli_query($conn, $sql)) {
-        echo "Task added successfully.";
-    } else {
-        echo "Error: " . mysqli_error($conn);
-    }
-
-    mysqli_close($conn);
+    $result = $taskManager->addTask($title, $description, $due_date, $status);
+    echo $result;
 }
 ?>

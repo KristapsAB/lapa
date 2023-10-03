@@ -1,37 +1,46 @@
 <?php
+class TaskStatusUpdater {
+    private $conn;
+
+    public function __construct() {
+        $servername = "localhost";
+        $username = "root";
+        $password = "";
+        $dbname = "task_management";
+
+        $this->conn = new mysqli($servername, $username, $password, $dbname);
+
+        if ($this->conn->connect_error) {
+            die("Connection failed: " . $this->conn->connect_error);
+        }
+    }
+
+    public function updateTaskStatus($taskId, $newStatus) {
+        $sql = "UPDATE tasks SET status = ? WHERE id = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("si", $newStatus, $taskId);
+
+        if ($stmt->execute()) {
+            return "Status updated successfully.";
+        } else {
+            return "Error: " . $stmt->error;
+        }
+
+        $stmt->close();
+    }
+
+    public function __destruct() {
+        $this->conn->close();
+    }
+}
+
+// Example usage of the TaskStatusUpdater class
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id']) && isset($_POST['status'])) {
-    // Get the task ID and new status from the POST data
     $taskId = $_POST['id'];
     $newStatus = $_POST['status'];
-    
-    // Establish a database connection
-    $servername = "localhost"; // Replace with your MySQL server address
-    $username = "root"; // Replace with your MySQL username
-    $password = ""; // Replace with your MySQL password
-    $dbname = "task_management"; // Replace with your database name
 
-    $conn = new mysqli($servername, $username, $password, $dbname);
-
-    // Check the connection
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
-
-    // Prepare and execute an UPDATE query to change the task's status
-    $sql = "UPDATE tasks SET status = ? WHERE id = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("si", $newStatus, $taskId);
-
-    if ($stmt->execute()) {
-        // Status updated successfully
-        echo "Status updated successfully.";
-    } else {
-        // An error occurred while updating the status
-        echo "Error: " . $stmt->error;
-    }
-
-    // Close the database connection
-    $stmt->close();
-    $conn->close();
+    $taskStatusUpdater = new TaskStatusUpdater();
+    $result = $taskStatusUpdater->updateTaskStatus($taskId, $newStatus);
+    echo $result;
 }
 ?>

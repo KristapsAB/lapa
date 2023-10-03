@@ -1,22 +1,18 @@
-*{
-    padding:0;
-    margin:0;
-}
-/* Reset some default styles */
-body, h1, form {
-    margin: 0;
+* {
     padding: 0;
+    margin: 0;
 }
 
 body {
     font-family: Arial, sans-serif;
-    background-color: #f0f0f0; /* Light gray background */
-    color: #333; /* Dark text color */
+    background-color: #49c5b6;
+    color: #333;
+    margin: 0;
 }
 
 h1 {
-    background-color: #333; /* Dark gray background for the header */
-    color: #fff; /* White text color */
+    background-color: #DF6C4F;
+    color: #fff;
     padding: 10px;
     text-align: center;
 }
@@ -25,8 +21,12 @@ form {
     max-width: 400px;
     margin: 20px auto;
     padding: 20px;
-    background-color: #fff; /* White background for the form */
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); /* Box shadow for a card-like appearance */
+    background-color: #DF6C4F;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    color:#fff;
+    text-align: center; 
+    display:flex;
+    flex-wrap:wrap;
 }
 
 label {
@@ -43,6 +43,7 @@ select {
     margin-bottom: 15px;
     border: 1px solid #ccc;
     border-radius: 4px;
+
 }
 
 input[type="date"] {
@@ -54,28 +55,30 @@ input[type="date"] {
 }
 
 input[type="submit"] {
-    background-color: #333; /* Dark gray background for the submit button */
-    color: #fff; /* White text color */
+    background-color: #333;
+    color: #fff;
     padding: 10px 20px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     font-weight: bold;
+    margin:auto;
 }
 
 input[type="submit"]:hover {
-    background-color: #555; /* Darker gray on hover */
+    background-color: #555;
 }
 
 #task-list {
-    max-width: 400px;
+    max-width: 600px;
     margin: 20px auto;
-    padding: 10px;
-    background-color: #fff; /* White background for the task list */
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); /* Box shadow for a card-like appearance */
+    padding: 20px;
+    background-color: #DF6C4F;
+    color:#fff;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
 }
 
-/* Customize the appearance of the task list */
 #task-list ul {
     list-style-type: none;
     padding: 0;
@@ -84,21 +87,16 @@ input[type="submit"]:hover {
 #task-list li {
     border-bottom: 1px solid #ccc;
     padding: 10px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-/* Define a color for different task statuses */
-.task-status-Pending {
-    color: #ff9900; /* Orange for Pending tasks */
+.task-buttons {
+    display: flex;
+    gap: 10px;
 }
 
-.task-status-Completed {
-    color: #009933; /* Green for Completed tasks */
-}
-
-.task-status-InProgress {
-    color: #3366ff; /* Blue for In Progress tasks */
-}
-
-.task-status-Canceled {
-    color: #cc0000; /* Red for Canceled tasks */
+.is-done-checkbox {
+    margin: 0;
 }
