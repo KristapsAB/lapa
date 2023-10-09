@@ -10,7 +10,6 @@
             <?php if (isset($_SESSION['user_id'])) : ?>
                 <ul>
                     <li><a href="index.php">Home</a></li>
-                    <li><a href="profile.php">Profile</a></li>
                     <li><a href="logout.php">Logout</a></li>
                     <p>Welcome, <?php echo $_SESSION['username']; ?>
                 </ul>

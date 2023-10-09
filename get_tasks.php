@@ -15,8 +15,8 @@ class TaskFetcher {
         }
     }
 
-    public function fetchTasks() {
-        $sql = "SELECT * FROM tasks";
+    public function fetchTasks($sortOption = 'title ASC') {
+        $sql = "SELECT * FROM tasks ORDER BY $sortOption";
         $result = $this->conn->query($sql);
 
         if ($result->num_rows > 0) {
@@ -47,7 +47,11 @@ class TaskFetcher {
 }
 
 $taskFetcher = new TaskFetcher();
-$tasks = $taskFetcher->fetchTasks();
+
+// Define the sorting option (e.g., 'title ASC', 'due_date DESC', 'status ASC', etc.)
+$sortOption = isset($_GET['sort']) ? $_GET['sort'] : 'title ASC';
+
+$tasks = $taskFetcher->fetchTasks($sortOption);
 
 if (!empty($tasks)) {
     echo '<ul>';
