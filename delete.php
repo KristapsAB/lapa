@@ -8,12 +8,10 @@ $task = new Task($db);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode(file_get_contents("php://input"));
-    $task_id = $data->id; // Get task ID from the request
+    $task_id = $data->id; 
 
-    // Debug: Print the task ID to the console
     echo "Task ID: " . $task_id;
 
-    // Attempt to delete the task
     $result = $task->deleteTask($task_id);
 
     if ($result) {

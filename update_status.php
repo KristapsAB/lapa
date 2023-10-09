@@ -34,7 +34,6 @@ class TaskStatusUpdater {
     }
 }
 
-// Example usage of the TaskStatusUpdater class
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id']) && isset($_POST['status'])) {
     $taskId = $_POST['id'];
     $newStatus = $_POST['status'];

@@ -1,4 +1,5 @@
 <?php
+
 require_once 'Task.php';
 
 $db = new mysqli('localhost', 'root', '', 'task_management');
